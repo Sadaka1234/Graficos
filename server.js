@@ -85,29 +85,28 @@ app.route('/login')
         res.sendFile(__dirname + '/public/index.html');
     })
     .post((req, res) => {
-        var username = req.body.username,
-            password = req.body.password;
-
         User.findOne({ where: { username: username } }).then(function (user) {
-            if (!user) {
-                res.redirect('/login');
-            } else if (!user.validPassword(password)) {
-                res.redirect('/login');
-            } else {
-                req.session.user = user.dataValues;
-                res.redirect('/dashboard');
-            }
+            res.sendFile(__dirname + '/public/trabajando.html')
+        });
+    });
+
+app.route('/dashboard')
+    .get(sessionChecker, (req, res) => {
+        res.sendFile(__dirname + '/public/trabajando.html');
+    })
+    .post((req, res) => {
+        User.findOne({ where: { username: username } }).then(function (user) {
+            res.sendFile(__dirname + '/public/trabajando.html')
         });
     });
 
 
+
 // route for user's dashboard
+
+
 app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/public/index.html');
-    } else {
-        res.redirect('/login');
-    }
+        res.sendFile(__dirname + '/public/trabajando.html');
 });
 
 
