@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  IM HERE
 <title>Chart using XML Data</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
-<script>
-    function arrayToTable(tableData) {
-        var table = $('<table></table>');
-        $(tableData).each(function (i, rowData) {
-            var row = $('<tr></tr>');
-            $(rowData).each(function (j, cellData) {
-                row.append($('<td>'+cellData+'</td>'));
-            });
-            table.append(row);
-        });
-        return table;
-    }
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        var dataPoints = [];
 
-    $.ajax({
-        type: "GET",
-        url: "public/Prueba.csv",
-        success: function (data) {
-            $('body').append(arrayToTable(Papa.parse(data).data));
+        function getDataPointsFromCSV(csv) {
+            var dataPoints = csvLines = points = [];
+            csvLines = csv.split(/[\r?\n|\r|\n]+/);
+
+            for (var i = 0; i < csvLines.length; i++)
+                if (csvLines[i].length > 0) {
+                    points = csvLines[i].split(",");
+                    dataPoints.push({
+                        x: parseFloat(points[0]),
+                        y: parseFloat(points[1])
+                    });
+                }
+            return dataPoints;
         }
-    });
-</script>
+
+	$.get("http://my.mixtape.moe/lhevyr.csv", function(data) {
+	    var chart = new CanvasJS.Chart("chartContainer", {
+		    title: {
+		         text: "Chart from CSV",
+		    },
+		    data: [{
+		         type: "line",
+		         dataPoints: getDataPointsFromCSV(data)
+		      }]
+	     });
+
+	      chart.render();
+
+	});
+  }
 </script>
 </head>
 <body>
